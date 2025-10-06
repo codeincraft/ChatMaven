@@ -14,7 +14,7 @@ st.set_page_config(
     page_title="Chat with AI",
     page_icon="🌍"
 )
-
+st.secrets["OPENAI_API_KEY"]
 
 # Custom wrapper for messages
 def bot_message(text, key=None):
