@@ -38,3 +38,5 @@ langserve
 sse_starlette
 tiktoken
 onnxruntime==1.23.0
+streamlit
+streamlit-chat
