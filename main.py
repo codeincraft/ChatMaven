@@ -1,9 +1,7 @@
-
 import streamlit as st
 from streamlit_chat import message as st_message
-from dotenv import load_dotenv
 import os
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.schema import (
     SystemMessage,
     HumanMessage,
@@ -14,29 +12,29 @@ st.set_page_config(
     page_title="Chat with AI",
     page_icon="🌍"
 )
-st.secrets["OPENAI_API_KEY"]
 
 # Custom wrapper for messages
 def bot_message(text, key=None):
     st_message(text, key=key,
-               avatar_style="bottts", seed="ChatMaven")   # Bot with unique seed
+               avatar_style="bottts", seed="ChatMaven")
 
 def user_message(text, key=None):
     st_message(text, is_user=True, key=key, avatar_style="personas", 
-               seed="User1001"
-               )  # User with unique seed
+               seed="User1001")
 
 def init():
-    load_dotenv()  # Load environment variables from .env file
-    if os.getenv("OPENAI_API_KEY") is None or os.getenv("OPENAI_API_KEY") == " ":
-        print("OPENAI_API_KEY is not set")
-        exit(1)
-    else:
-        print("OPENAI_API_KEY is set")  
- 
+    # Use Streamlit secrets for API key (works both locally and on cloud)
+    try:
+        api_key = st.secrets["OPENAI_API_KEY"]
+        os.environ["OPENAI_API_KEY"] = api_key
+        return True
+    except Exception as e:
+        st.error("OPENAI_API_KEY is not set in secrets")
+        return False
     
 def main():
-    init()
+    if not init():
+        st.stop()
     
     chat = ChatOpenAI(temperature=0.2)
     
@@ -55,7 +53,6 @@ def main():
             bot_message(msg.content, key=f"{i}_ai")
 
     with st.sidebar:
-        # Use a form with clear_on_submit=True
         with st.form(key="chat_form", clear_on_submit=True):
             user_input = st.text_input("Your message:", key="user_input")
             send_button = st.form_submit_button("Send")
