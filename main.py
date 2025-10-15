@@ -1,3 +1,5 @@
+
+
 import streamlit as st
 from streamlit_chat import message as st_message
 import os
@@ -10,7 +12,8 @@ from langchain.schema import (
 
 st.set_page_config(
     page_title="Chat with AI",
-    page_icon="🌍"
+    page_icon="🌍",
+    layout="wide"
 )
 
 # Custom wrapper for messages
@@ -23,7 +26,6 @@ def user_message(text, key=None):
                seed="User1001")
 
 def init():
-    # Use Streamlit secrets for API key (works both locally and on cloud)
     try:
         api_key = st.secrets["OPENAI_API_KEY"]
         os.environ["OPENAI_API_KEY"] = api_key
@@ -44,25 +46,39 @@ def main():
         ]
     
     st.header("ChatMaven 🌍")
+    st.markdown("---")
 
-    # Display chat history (skip SystemMessage at index 0)
+    # Display chat history
     for i, msg in enumerate(st.session_state.messages[1:]):
         if isinstance(msg, HumanMessage):
             user_message(msg.content, key=f"{i}_user")
         elif isinstance(msg, AIMessage):
             bot_message(msg.content, key=f"{i}_ai")
-
-    with st.sidebar:
-        with st.form(key="chat_form", clear_on_submit=True):
-            user_input = st.text_input("Your message:", key="user_input")
-            send_button = st.form_submit_button("Send")
+    
+    # Input at bottom
+    with st.form(key="chat_form", clear_on_submit=True):
+        col1, col2 = st.columns([5, 1])
         
-        if send_button and user_input:
-            st.session_state.messages.append(HumanMessage(content=user_input))
-            with st.spinner("ChatMaven is thinking..."):
-                response = chat(st.session_state.messages)
-            st.session_state.messages.append(AIMessage(content=response.content))
-            st.rerun()
+        with col1:
+            user_input = st.text_area(
+                "Message", 
+                key="user_input",
+                placeholder="Type your message here...",
+                label_visibility="collapsed",
+                height=68,
+                max_chars=None
+            )
+        
+        with col2:
+            send_button = st.form_submit_button("Send 📤", use_container_width=True)
+    
+    # Only process when send button is clicked (Enter key won't submit)
+    if send_button and user_input and user_input.strip():
+        st.session_state.messages.append(HumanMessage(content=user_input))
+        with st.spinner("ChatMaven is thinking..."):
+            response = chat(st.session_state.messages)
+        st.session_state.messages.append(AIMessage(content=response.content))
+        st.rerun()
 
 if __name__ == "__main__":
     main()
