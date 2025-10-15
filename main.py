@@ -14,34 +14,23 @@ st.set_page_config(
     layout="wide"
 )
 
-# CSS to pin form to bottom with side-by-side layout
+# CSS compatible with Streamlit Cloud
 st.markdown("""
 <style>
-    /* Pin form to bottom */
-    .stForm {
-        position: fixed;
+    /* Sticky container for cloud compatibility */
+    [data-testid="stForm"] {
+        position: sticky;
         bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 1rem;
-        background-color: black;
+        background-color: white;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border-top: 1px solid #ddd;
         z-index: 999;
     }
     
-    /* Add padding to main content to prevent overlap */
-    .main > div {
-        padding-bottom: 120px;
-    }
-    
-    /* Ensure columns are side by side */
-    .stForm [data-testid="column"] {
-        display: inline-block;
-        vertical-align: top;
-    }
-    
-    /* Make button align with textarea */
-    .stForm [data-testid="column"]:nth-child(2) button {
-        margin-top: 0;
+    /* Ensure proper spacing */
+    .main .block-container {
+        padding-bottom: 2rem;
     }
 </style>
 """, unsafe_allow_html=True)
