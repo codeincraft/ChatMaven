@@ -21,7 +21,7 @@ st.markdown("""
     [data-testid="stForm"] {
         position: sticky;
         bottom: 0;
-        background-color: black;
+        background-color: transparent;
         padding-top: 1rem;
         padding-bottom: 1rem;
         z-index: 999;
@@ -30,6 +30,43 @@ st.markdown("""
     /* Ensure proper spacing */
     .main .block-container {
         padding-bottom: 2rem;
+    }
+    
+    /* Keep columns horizontal on all screen sizes */
+    [data-testid="stForm"] [data-testid="column"] {
+        min-width: 0 !important;
+        flex-shrink: 1 !important;
+    }
+    
+    /* Responsive button sizing */
+    @media (max-width: 768px) {
+        [data-testid="stForm"] [data-testid="column"]:first-child {
+            flex: 0 0 75% !important;
+            width: 75% !important;
+        }
+        [data-testid="stForm"] [data-testid="column"]:last-child {
+            flex: 0 0 25% !important;
+            width: 25% !important;
+        }
+        .stButton button {
+            padding: 0.5rem !important;
+            font-size: 0.8rem !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        [data-testid="stForm"] [data-testid="column"]:first-child {
+            flex: 0 0 70% !important;
+            width: 70% !important;
+        }
+        [data-testid="stForm"] [data-testid="column"]:last-child {
+            flex: 0 0 30% !important;
+            width: 30% !important;
+        }
+        .stButton button {
+            padding: 0.4rem !important;
+            font-size: 0.75rem !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
