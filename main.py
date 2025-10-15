@@ -17,19 +17,27 @@ st.set_page_config(
 # Modern CSS with integrated send button
 st.markdown("""
 <style>
-    /* Sticky container for cloud compatibility */
+    /* Fixed container to bottom */
     [data-testid="stForm"] {
-        position: sticky;
+        position: fixed;
         bottom: 0;
+        left: 0;
+        right: 0;
         background-color: #1e1e1e;
         padding: 1.5rem;
         border-top: 1px solid #3a3a3a;
         z-index: 999;
+        margin: 0;
     }
     
-    /* Ensure proper spacing */
+    /* Add padding to main content to prevent overlap with fixed input */
     .main .block-container {
-        padding-bottom: 2rem;
+        padding-bottom: 140px !important;
+    }
+    
+    /* Ensure chat messages are scrollable */
+    .main {
+        overflow-y: auto;
     }
     
     /* Container for input wrapper */
