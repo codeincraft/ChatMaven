@@ -21,9 +21,10 @@ st.markdown("""
     [data-testid="stForm"] {
         position: sticky;
         bottom: 0;
-        background-color: transparent;
+        background-color: white;
         padding-top: 1rem;
         padding-bottom: 1rem;
+        border-top: 1px solid #ddd;
         z-index: 999;
     }
     
