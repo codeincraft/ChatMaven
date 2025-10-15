@@ -14,17 +14,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# CSS compatible with Streamlit Cloud
+# Modern CSS with integrated send button
 st.markdown("""
 <style>
     /* Sticky container for cloud compatibility */
     [data-testid="stForm"] {
         position: sticky;
         bottom: 0;
-        background-color: white;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        border-top: 1px solid #ddd;
+        background-color: #1e1e1e;
+        padding: 1.5rem;
+        border-top: 1px solid #3a3a3a;
         z-index: 999;
     }
     
@@ -33,40 +32,95 @@ st.markdown("""
         padding-bottom: 2rem;
     }
     
-    /* Keep columns horizontal on all screen sizes */
-    [data-testid="stForm"] [data-testid="column"] {
-        min-width: 0 !important;
-        flex-shrink: 1 !important;
+    /* Container for input wrapper */
+    [data-testid="stForm"] > div {
+        max-width: 900px;
+        margin: 0 auto;
     }
     
-    /* Responsive button sizing */
+    /* Style the textarea container */
+    .stTextArea {
+        position: relative;
+    }
+    
+    /* Modern dark textarea styling */
+    .stTextArea textarea {
+        background-color: #2d2d2d !important;
+        border: 1px solid #3a3a3a !important;
+        border-radius: 24px !important;
+        color: #e0e0e0 !important;
+        padding: 14px 60px 14px 20px !important;
+        font-size: 15px !important;
+        resize: none !important;
+        min-height: 52px !important;
+        max-height: 200px !important;
+        line-height: 1.5 !important;
+    }
+    
+    .stTextArea textarea:focus {
+        border-color: #555 !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    
+    .stTextArea textarea::placeholder {
+        color: #888 !important;
+    }
+    
+    /* Position send button inside textarea */
+    [data-testid="stForm"] [data-testid="column"]:last-child {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        width: auto !important;
+        z-index: 10;
+    }
+    
+    /* Style the send button */
+    .stButton button {
+        background-color: #404040 !important;
+        color: #e0e0e0 !important;
+        border: none !important;
+        border-radius: 50% !important;
+        width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+        min-height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stButton button:hover {
+        background-color: #505050 !important;
+    }
+    
+    .stButton button:active {
+        background-color: #606060 !important;
+    }
+    
+    /* Hide button text, show only emoji */
+    .stButton button p {
+        font-size: 18px !important;
+        margin: 0 !important;
+        line-height: 1 !important;
+    }
+    
+    /* Make first column take full width */
+    [data-testid="stForm"] [data-testid="column"]:first-child {
+        width: 100% !important;
+        position: relative;
+    }
+    
+    /* Responsive adjustments */
     @media (max-width: 768px) {
-        [data-testid="stForm"] [data-testid="column"]:first-child {
-            flex: 0 0 75% !important;
-            width: 75% !important;
+        [data-testid="stForm"] {
+            padding: 1rem;
         }
-        [data-testid="stForm"] [data-testid="column"]:last-child {
-            flex: 0 0 25% !important;
-            width: 25% !important;
-        }
-        .stButton button {
-            padding: 0.5rem !important;
-            font-size: 0.8rem !important;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        [data-testid="stForm"] [data-testid="column"]:first-child {
-            flex: 0 0 70% !important;
-            width: 70% !important;
-        }
-        [data-testid="stForm"] [data-testid="column"]:last-child {
-            flex: 0 0 30% !important;
-            width: 30% !important;
-        }
-        .stButton button {
-            padding: 0.4rem !important;
-            font-size: 0.75rem !important;
+        
+        .stTextArea textarea {
+            font-size: 14px !important;
         }
     }
 </style>
@@ -111,24 +165,24 @@ def main():
         elif isinstance(msg, AIMessage):
             bot_message(msg.content, key=f"{i}_ai")
     
-    # Fixed input at bottom with 90-10 split
+    # Modern input field with integrated send button
     with st.form(key="chat_form", clear_on_submit=True):
-        col1, col2 = st.columns([9, 1])
+        col1, col2 = st.columns([1, 0.001])
         
         with col1:
             user_input = st.text_area(
                 "Message", 
                 key="user_input",
-                placeholder="Type your message here...",
+                placeholder="Ask anything",
                 label_visibility="collapsed",
-                height=68,
+                height=52,
                 max_chars=None
             )
         
         with col2:
-            send_button = st.form_submit_button("Send 📤", use_container_width=True)
+            send_button = st.form_submit_button("↑", use_container_width=False)
     
-    # Only process when send button is clicked (Enter key won't submit)
+    # Only process when send button is clicked
     if send_button and user_input and user_input.strip():
         st.session_state.messages.append(HumanMessage(content=user_input))
         with st.spinner("ChatMaven is thinking..."):
