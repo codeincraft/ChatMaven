@@ -145,7 +145,11 @@ def main():
     if not init():
         st.stop()
     
-    chat = ChatOpenAI(temperature=0.2)
+    # Initialize ChatOpenAI with proper configuration
+    chat = ChatOpenAI(
+        temperature=0.2,
+        model="gpt-3.5-turbo"  # Explicitly specify model
+    )
     
     if "messages" not in st.session_state:
         st.session_state.messages = [
@@ -181,10 +185,19 @@ def main():
     
     # Only process when send button is clicked
     if send_button and user_input and user_input.strip():
+        # Add user message to session state
         st.session_state.messages.append(HumanMessage(content=user_input))
+        
+        # Get AI response using invoke method (new LangChain syntax)
         with st.spinner("ChatMaven is thinking..."):
-            response = chat(st.session_state.messages)
-        st.session_state.messages.append(AIMessage(content=response.content))
+            try:
+                response = chat.invoke(st.session_state.messages)
+                st.session_state.messages.append(AIMessage(content=response.content))
+            except Exception as e:
+                st.error(f"Error getting response: {str(e)}")
+                # Remove the user message if there was an error
+                st.session_state.messages.pop()
+        
         st.rerun()
 
 if __name__ == "__main__":
