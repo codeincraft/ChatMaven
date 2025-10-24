@@ -1,7 +1,5 @@
+
 import streamlit as st
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from streamlit_chat import message as st_message
 import os
 from langchain_openai import ChatOpenAI
@@ -20,19 +18,27 @@ st.set_page_config(
 # Modern CSS with integrated send button
 st.markdown("""
 <style>
-    /* Sticky container for cloud compatibility */
+    /* Fixed container to bottom */
     [data-testid="stForm"] {
-        position: sticky;
+        position: fixed;
         bottom: 0;
+        left: 0;
+        right: 0;
         background-color: #1e1e1e;
         padding: 1.5rem;
         border-top: 1px solid #3a3a3a;
         z-index: 999;
+        margin: 0;
     }
     
-    /* Ensure proper spacing */
+    /* Add padding to main content to prevent overlap with fixed input */
     .main .block-container {
-        padding-bottom: 2rem;
+        padding-bottom: 140px !important;
+    }
+    
+    /* Ensure chat messages are scrollable */
+    .main {
+        overflow-y: auto;
     }
     
     /* Container for input wrapper */
@@ -55,7 +61,7 @@ st.markdown("""
         padding: 14px 60px 14px 20px !important;
         font-size: 15px !important;
         resize: none !important;
-        min-height: 52px !important;
+        min-height: 68px !important;
         max-height: 200px !important;
         line-height: 1.5 !important;
     }
@@ -178,7 +184,7 @@ def main():
                 key="user_input",
                 placeholder="Ask anything",
                 label_visibility="collapsed",
-                height=52,
+                height=68,
                 max_chars=None
             )
         
