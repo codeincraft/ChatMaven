@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_chat import message as st_message
 import os
 from langchain_openai import ChatOpenAI
-from langchain.schema import (
+from langchain.core.messages import (
     SystemMessage,
     HumanMessage,
     AIMessage)
